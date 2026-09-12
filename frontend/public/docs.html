@@ -1,0 +1,879 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tally XML API Reference</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon-256.png" />
+<style>
+  :root {
+    --text: #597573;
+    --text-h: #283939;
+    --bg: #F1FEFB;
+    --surface: #ffffff;
+    --border: #D5F4EE;
+    --accent: #01A5BA;
+    --accent-bg: rgba(0, 202, 206, 0.12);
+    --code-bg: #F1FEFB;
+    --warn-bg: #fff7ed;
+    --warn-border: #fdba74;
+    --warn-text: #9a3412;
+    --ok-bg: rgba(126, 220, 0, 0.12);
+    --ok-border: rgba(126, 220, 0, 0.4);
+    --ok-text: #2e7d32;
+    --shadow: 0 4px 20px -4px rgba(1, 165, 186, 0.1), 0 1px 3px rgba(40, 57, 57, 0.05);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font: 15px/1.6 -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 14px 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-h);
+    padding: 4px 10px 16px;
+  }
+  .brand-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .brand small {
+    display: block;
+    font-weight: 400;
+    font-size: 11.5px;
+    color: var(--text);
+    margin-top: 2px;
+  }
+  .nav-section {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    opacity: 0.6;
+    padding: 14px 10px 6px;
+  }
+  .nav-section:first-of-type { padding-top: 4px; }
+  .sidebar a {
+    display: block;
+    padding: 7px 10px;
+    border-radius: 6px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13.5px;
+  }
+  .sidebar a:hover { background: var(--accent-bg); color: var(--accent); }
+  .sidebar a.active { background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px 100px;
+    max-width: 900px;
+  }
+  h1 { font-size: 26px; color: var(--text-h); margin: 0 0 8px; }
+  h2 {
+    font-size: 20px;
+    color: var(--text-h);
+    margin: 48px 0 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+  section:first-of-type h2:first-of-type { border-top: none; padding-top: 0; }
+  h3 { font-size: 15.5px; color: var(--text-h); margin: 24px 0 8px; }
+  p { margin: 0 0 12px; }
+  .lede { font-size: 16px; color: var(--text); max-width: 640px; }
+  code {
+    font-family: ui-monospace, Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--text-h);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+  .callout {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 13.5px;
+    border: 1px solid;
+  }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-border); color: var(--warn-text); }
+  .callout.ok { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-text); }
+  .callout strong { display: block; margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-h); font-weight: 600; background: var(--code-bg); }
+  td code { white-space: nowrap; }
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  ul, ol { padding-left: 22px; margin: 0 0 12px; }
+  li { margin-bottom: 4px; }
+  .field-table td:first-child { font-family: ui-monospace, Consolas, monospace; color: var(--text-h); }
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text);
+  }
+  @media (max-width: 800px) {
+    .layout { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--border); }
+    .content { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="/logo-icon.png" alt="" class="brand-icon" />
+      <span>Tally XML API Reference
+        <small>Reverse-engineered field notes</small>
+      </span>
+    </div>
+
+    <div class="nav-section">Getting Started</div>
+    <a href="#overview">Overview</a>
+    <a href="#connecting">Connecting to Tally</a>
+    <a href="#envelope">Request Envelope Basics</a>
+
+    <div class="nav-section">Reading Data</div>
+    <a href="#reading-pattern">Collection Request Pattern</a>
+    <a href="#read-company">Company</a>
+    <a href="#read-taxunit">GST Registration (TAXUNIT)</a>
+    <a href="#read-ledger">Ledger</a>
+    <a href="#read-group">Group</a>
+    <a href="#read-stockitem">Stock Item</a>
+    <a href="#read-stockgroup">Stock Group / Category</a>
+    <a href="#read-unit">Unit</a>
+    <a href="#read-voucher">Voucher</a>
+
+    <div class="nav-section">Writing Data</div>
+    <a href="#writing-pattern">Import Request Pattern</a>
+    <a href="#write-ledger">Create / Alter Ledger</a>
+    <a href="#write-stockitem">Create / Alter Stock Item</a>
+    <a href="#write-groups">Create Groups / Category</a>
+    <a href="#write-unit">Create Unit</a>
+    <a href="#write-rename">Renaming a Record</a>
+    <a href="#write-delete">Deleting a Record</a>
+    <a href="#write-voucher-simple">Create a Voucher (simple)</a>
+    <a href="#write-voucher-item">Create a Voucher (Sales/Purchase)</a>
+    <a href="#write-voucher-edit">Editing a Voucher</a>
+    <a href="#write-voucher-delete">Deleting a Voucher</a>
+
+    <div class="nav-section">Reference</div>
+    <a href="#sign-conventions">Sign Conventions</a>
+    <a href="#gotchas">Gotchas &amp; Quirks</a>
+    <a href="#field-tables">Field Tables</a>
+  </nav>
+
+  <main class="content">
+
+    <section id="overview">
+      <h1>Tally XML API Reference</h1>
+      <p class="lede">Everything in this page was confirmed by sending real requests to a live TallyPrime instance and reading the response back — not copied from Tally's own (often incomplete or outdated) documentation. Field names, required-but-undocumented sub-fields, and sign conventions are all here specifically because they were <em>not</em> obvious from Tally's docs.</p>
+      <div class="callout ok">
+        <strong>This page has no dependency on this project's backend.</strong>
+        Everything below talks directly to Tally's own XML/HTTP gateway (default <code>http://localhost:9000</code>). Copy any example, point it at your own Tally instance, and it works standalone.
+      </div>
+    </section>
+
+    <section id="connecting">
+      <h2>Connecting to Tally</h2>
+      <p>Enable Tally's XML server: <strong>F1 (Help) → Settings → Connectivity → Client/Server configuration</strong> → set a port (default <code>9000</code>) and make sure "Enable ODBC" / act as an HTTP server is on. Tally then accepts plain HTTP POST requests with an XML body at <code>http://&lt;host&gt;:&lt;port&gt;</code> — no auth, no headers beyond <code>Content-Type: text/xml</code>.</p>
+      <pre><code>curl -X POST http://localhost:9000 -H "Content-Type: text/xml" --data-binary @request.xml</code></pre>
+      <p>Tally accepts plain UTF-8 request bodies fine (no need for UTF-16 despite some older guides claiming otherwise). Response bodies can contain raw control characters (e.g. <code>&amp;#4;</code> as a "not applicable" marker, or literal 0x00–0x1F bytes) that break strict XML parsers — strip <code>[\x00-\x08\x0B\x0C\x0E-\x1F]</code> and the literal string <code>&amp;#4;</code> before parsing.</p>
+    </section>
+
+    <section id="envelope">
+      <h2>Request Envelope Basics</h2>
+      <p>Every request is an <code>&lt;ENVELOPE&gt;</code> with a <code>&lt;HEADER&gt;</code> and <code>&lt;BODY&gt;</code>. The <code>&lt;TALLYREQUEST&gt;</code> value decides what kind of operation this is:</p>
+      <table>
+        <tr><th>TALLYREQUEST</th><th>Used for</th></tr>
+        <tr><td><code>Export Data</code></td><td>Reading data — TDL Collection queries, native reports</td></tr>
+        <tr><td><code>Import Data</code></td><td>Writing data — create / alter / delete masters and vouchers</td></tr>
+      </table>
+      <p>These two modes have <strong>completely different body shapes</strong> — see the two pattern sections below.</p>
+    </section>
+
+    <section id="reading-pattern">
+      <h2>Collection Request Pattern (Export)</h2>
+      <p>The most useful read mechanism is a native <strong>Collection</strong> request. It reads straight off Tally's internal object model — no TDL report needs to exist on the Tally side. List the exact fields you want with <code>&lt;FETCH&gt;</code> tags.</p>
+      <pre><code>&lt;ENVELOPE&gt;
+ &lt;HEADER&gt;
+  &lt;VERSION&gt;1&lt;/VERSION&gt;
+  &lt;TALLYREQUEST&gt;Export Data&lt;/TALLYREQUEST&gt;
+  &lt;TYPE&gt;Collection&lt;/TYPE&gt;
+  &lt;ID&gt;MyCollection&lt;/ID&gt;
+ &lt;/HEADER&gt;
+ &lt;BODY&gt;
+  &lt;DESC&gt;
+   &lt;STATICVARIABLES&gt;
+    &lt;SVEXPORTFORMAT&gt;$$SysName:XML&lt;/SVEXPORTFORMAT&gt;
+    &lt;!-- optional, needed for Vouchers: --&gt;
+    &lt;SVFROMDATE&gt;20250401&lt;/SVFROMDATE&gt;
+    &lt;SVTODATE&gt;20260331&lt;/SVTODATE&gt;
+   &lt;/STATICVARIABLES&gt;
+   &lt;TDL&gt;
+    &lt;TDLMESSAGE&gt;
+     &lt;COLLECTION NAME="MyCollection" ISMODIFY="No"&gt;
+      &lt;TYPE&gt;Ledger&lt;/TYPE&gt;
+      &lt;FETCH&gt;NAME&lt;/FETCH&gt;
+      &lt;FETCH&gt;PARENT&lt;/FETCH&gt;
+      &lt;FETCH&gt;OPENINGBALANCE&lt;/FETCH&gt;
+     &lt;/COLLECTION&gt;
+    &lt;/TDLMESSAGE&gt;
+   &lt;/TDL&gt;
+  &lt;/DESC&gt;
+ &lt;/BODY&gt;
+&lt;/ENVELOPE&gt;</code></pre>
+      <p>Swap <code>&lt;TYPE&gt;Ledger&lt;/TYPE&gt;</code> for any native object type (<code>Company</code>, <code>Group</code>, <code>StockItem</code>, <code>StockGroup</code>, <code>StockCategory</code>, <code>Unit</code>, <code>TAXUNIT</code>, <code>Voucher</code>…). Requesting a nested list field (e.g. <code>ADDRESS.LIST</code>) auto-expands its children — you don't need to enumerate the sub-fields.</p>
+      <div class="callout warn">
+        <strong>You can fetch every field a type has with <code>&lt;FETCH&gt;*&lt;/FETCH&gt;</code></strong>
+        Extremely useful for discovering field names Tally's docs don't mention. Only use it for masters — never combine a date-range (<code>SVFROMDATE</code>/<code>SVTODATE</code>) with <code>StockItem</code> + wildcard fetch; on this Tally build it hung the entire XML server for about a minute across all 1000+ items.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="read-company">Company</h3>
+      <p>The company's own address is <strong>not</strong> under <code>ADDRESS.LIST</code> (that only works for Ledgers). It's flattened into a single comma-joined string:</p>
+      <pre><code>&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;REMOTEFULLLISTNAME&lt;/FETCH&gt;  &lt;!-- flattened multi-line address --&gt;
+&lt;FETCH&gt;STATENAME&lt;/FETCH&gt;
+&lt;FETCH&gt;COUNTRYNAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PINCODE&lt;/FETCH&gt;
+&lt;FETCH&gt;EMAIL&lt;/FETCH&gt;
+&lt;FETCH&gt;WEBSITE&lt;/FETCH&gt;
+&lt;FETCH&gt;PHONENUMBER&lt;/FETCH&gt;
+&lt;FETCH&gt;MOBILENO&lt;/FETCH&gt;          &lt;!-- not "MOBILENUMBER" --&gt;
+&lt;FETCH&gt;INCOMETAXNUMBER&lt;/FETCH&gt;   &lt;!-- PAN --&gt;
+&lt;FETCH&gt;CORPORATEIDENTITYNO&lt;/FETCH&gt; &lt;!-- CIN --&gt;
+&lt;FETCH&gt;STARTINGFROM&lt;/FETCH&gt;
+&lt;FETCH&gt;BOOKSFROM&lt;/FETCH&gt;</code></pre>
+      <p>Splitting <code>REMOTEFULLLISTNAME</code> on commas gives you back the address lines. Example real value: <code>"MANKACHAR JAME MASJID, 0, GROUND FLOOR, MASJID COMPLEX, MAIN ROAD, MANKACHAR, SOUTH SALMARA MANKACHAR, FSSAI: 10320007000020"</code>.</p>
+      <div class="callout warn">
+        <strong>The Company object does NOT carry the company's own GSTIN.</strong>
+        <code>GSTREGISTRATIONNUMBER</code> exists as a field but is reliably empty in TallyPrime 5+. See <a href="#read-taxunit">GST Registration (TAXUNIT)</a> below — this is a separate object entirely.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="read-taxunit">GST Registration <span class="badge">TYPE=TAXUNIT</span></h3>
+      <p>In TallyPrime 5+, a company's GST registration(s) are their own master object — internally typed <code>TAXUNIT</code> — supporting multiple registrations (branches/states) per company. A single-registration company still gets exactly one real <code>TAXUNIT</code> record, plus an unrelated <code>"Default Tax Unit"</code> placeholder with no GSTIN (filter it out by requiring a non-empty GSTIN).</p>
+      <pre><code>&lt;TYPE&gt;TAXUNIT&lt;/TYPE&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;GSTREGNUMBER&lt;/FETCH&gt;
+&lt;FETCH&gt;PAN&lt;/FETCH&gt;
+&lt;FETCH&gt;GSTEINVBILLFROMPLACE&lt;/FETCH&gt;
+&lt;FETCH&gt;GSTREGISTRATIONDETAILS.LIST&lt;/FETCH&gt;
+&lt;!-- nested: STATE, REGISTRATIONTYPE, PLACEOFSUPPLY, GSTR1PERIODICITY --&gt;</code></pre>
+    </section>
+
+    <section>
+      <h3 id="read-ledger">Ledger</h3>
+      <pre><code>&lt;TYPE&gt;Ledger&lt;/TYPE&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PARENT&lt;/FETCH&gt;
+&lt;FETCH&gt;ADDRESS.LIST&lt;/FETCH&gt;
+&lt;FETCH&gt;STATE&lt;/FETCH&gt;                &lt;!-- often empty; see PRIORSTATENAME --&gt;
+&lt;FETCH&gt;PRIORSTATENAME&lt;/FETCH&gt;       &lt;!-- reliable fallback for state --&gt;
+&lt;FETCH&gt;COUNTRYNAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PINCODE&lt;/FETCH&gt;
+&lt;FETCH&gt;LEDGERMOBILE&lt;/FETCH&gt;
+&lt;FETCH&gt;EMAIL&lt;/FETCH&gt;
+&lt;FETCH&gt;INCOMETAXNUMBER&lt;/FETCH&gt;      &lt;!-- PAN --&gt;
+&lt;FETCH&gt;ISBILLWISEON&lt;/FETCH&gt;
+&lt;FETCH&gt;OPENINGBALANCE&lt;/FETCH&gt;
+&lt;FETCH&gt;CLOSINGBALANCE&lt;/FETCH&gt;
+&lt;FETCH&gt;LEDGSTREGDETAILS.LIST&lt;/FETCH&gt; &lt;!-- real GSTIN lives here, see below --&gt;
+&lt;FETCH&gt;LANGUAGENAME.LIST&lt;/FETCH&gt;    &lt;!-- alias is the 2nd &lt;NAME&gt; here --&gt;</code></pre>
+      <div class="callout warn">
+        <strong>A party's GSTIN is NOT under <code>PARTYGSTIN</code>.</strong>
+        That flat field is legacy and empty on every real ledger we checked (0 of 295). The live value is nested:
+        <pre style="margin-top:8px"><code>LEDGSTREGDETAILS.LIST
+  GSTREGISTRATIONTYPE  → "Regular"
+  STATE
+  GSTIN                → the real GSTIN
+  PLACEOFSUPPLY</code></pre>
+      </div>
+      <div class="callout warn">
+        <strong>Alias is not a flat <code>&lt;ALIAS&gt;</code> field.</strong>
+        It's the <em>second</em> <code>&lt;NAME&gt;</code> entry inside <code>LANGUAGENAME.LIST/NAME.LIST</code> (the first is the primary name). This is true for every master type <em>except Unit</em>, which doesn't support alias at all — see <a href="#gotchas">Gotchas</a>.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="read-group">Group <span class="badge">Ledger Groups</span></h3>
+      <pre><code>&lt;TYPE&gt;Group&lt;/TYPE&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PARENT&lt;/FETCH&gt;             &lt;!-- "Primary" for top-level groups --&gt;
+&lt;FETCH&gt;ISDEEMEDPOSITIVE&lt;/FETCH&gt;   &lt;!-- Yes = Debit-natured, No = Credit-natured --&gt;
+&lt;FETCH&gt;AFFECTSGROSSPROFIT&lt;/FETCH&gt;
+&lt;FETCH&gt;ISSUBLEDGER&lt;/FETCH&gt;</code></pre>
+    </section>
+
+    <section>
+      <h3 id="read-stockitem">Stock Item</h3>
+      <pre><code>&lt;TYPE&gt;StockItem&lt;/TYPE&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PARENT&lt;/FETCH&gt;
+&lt;FETCH&gt;BASEUNITS&lt;/FETCH&gt;
+&lt;FETCH&gt;ADDITIONALUNITS&lt;/FETCH&gt;
+&lt;FETCH&gt;DENOMINATOR&lt;/FETCH&gt;         &lt;!-- alt-unit ratio, see Gotchas --&gt;
+&lt;FETCH&gt;OPENINGBALANCE&lt;/FETCH&gt;      &lt;!-- e.g. " 180 PCS =  15 CASE" --&gt;
+&lt;FETCH&gt;OPENINGVALUE&lt;/FETCH&gt;        &lt;!-- sign is inverted, see Sign Conventions --&gt;
+&lt;FETCH&gt;OPENINGRATE&lt;/FETCH&gt;         &lt;!-- e.g. "201.40/PCS" --&gt;
+&lt;FETCH&gt;CLOSINGBALANCE&lt;/FETCH&gt;
+&lt;FETCH&gt;CLOSINGVALUE&lt;/FETCH&gt;
+&lt;FETCH&gt;GSTTYPEOFSUPPLY&lt;/FETCH&gt;     &lt;!-- "Goods" / "Services" --&gt;
+&lt;FETCH&gt;HSNDETAILS.LIST&lt;/FETCH&gt;     &lt;!-- nested: HSNCODE --&gt;
+&lt;FETCH&gt;GSTDETAILS.LIST&lt;/FETCH&gt;     &lt;!-- nested, see below --&gt;</code></pre>
+      <p><code>GSTDETAILS.LIST</code> nests three levels deep:</p>
+      <pre><code>GSTDETAILS.LIST
+  TAXABILITY                    → "Taxable" / "Exempt" / "Nil Rated"
+  STATEWISEDETAILS.LIST
+    STATENAME                   → literal "&amp;#4; Any" for all-states
+    RATEDETAILS.LIST (repeated, one per duty head)
+      GSTRATEDUTYHEAD            → "CGST" / "SGST/UTGST" / "IGST" / "Cess" / "State Cess"
+      GSTRATEVALUATIONTYPE       → "Based on Value"
+      GSTRATE                    → the percentage</code></pre>
+    </section>
+
+    <section>
+      <h3 id="read-stockgroup">Stock Group / Stock Category</h3>
+      <pre><code>&lt;TYPE&gt;StockGroup&lt;/TYPE&gt;    &lt;!-- or StockCategory --&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;PARENT&lt;/FETCH&gt;</code></pre>
+    </section>
+
+    <section>
+      <h3 id="read-unit">Unit</h3>
+      <pre><code>&lt;TYPE&gt;Unit&lt;/TYPE&gt;
+&lt;FETCH&gt;NAME&lt;/FETCH&gt;
+&lt;FETCH&gt;ISSIMPLEUNIT&lt;/FETCH&gt;
+&lt;FETCH&gt;BASEUNITS&lt;/FETCH&gt;            &lt;!-- only for compound units, e.g. KG.GM --&gt;
+&lt;FETCH&gt;CONVERSION&lt;/FETCH&gt;
+&lt;FETCH&gt;DECIMALPLACES&lt;/FETCH&gt;
+&lt;FETCH&gt;REPORTINGUQCDETAILS.LIST&lt;/FETCH&gt; &lt;!-- nested: REPORTINGUQCNAME, the GST UQC code --&gt;</code></pre>
+      <div class="callout warn">
+        <strong>The Unit master's own <code>BASEUNITS</code>/<code>CONVERSION</code> is NOT what a stock item's alternate-unit ratio uses.</strong>
+        These describe genuine <em>compound units</em> (e.g. a unit literally named "KG.GM"). Every simple unit has <code>CONVERSION=0</code>. A stock item's own "1 CASE = 12 PCS" ratio lives on the <em>stock item</em>, not the unit — see below.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="read-voucher">Voucher</h3>
+      <p>Requires <code>SVFROMDATE</code>/<code>SVTODATE</code> in <code>STATICVARIABLES</code> (see the pattern example above).</p>
+      <pre><code>&lt;TYPE&gt;Voucher&lt;/TYPE&gt;
+&lt;FETCH&gt;DATE&lt;/FETCH&gt;
+&lt;FETCH&gt;VOUCHERTYPENAME&lt;/FETCH&gt;
+&lt;FETCH&gt;VOUCHERNUMBER&lt;/FETCH&gt;
+&lt;FETCH&gt;PARTYLEDGERNAME&lt;/FETCH&gt;
+&lt;FETCH&gt;NARRATION&lt;/FETCH&gt;
+&lt;FETCH&gt;GUID&lt;/FETCH&gt;
+&lt;FETCH&gt;ALLLEDGERENTRIES.LIST&lt;/FETCH&gt;    &lt;!-- nested: LEDGERNAME, AMOUNT --&gt;
+&lt;FETCH&gt;ALLINVENTORYENTRIES.LIST&lt;/FETCH&gt; &lt;!-- nested: STOCKITEMNAME, BILLEDQTY, RATE, AMOUNT --&gt;</code></pre>
+      <p>The voucher's own <code>VCHTYPE</code> attribute (on the <code>&lt;VOUCHER&gt;</code> tag itself) is a more reliable voucher-type label than the <code>VOUCHERTYPENAME</code> field in some edge cases.</p>
+      <div class="callout ok">
+        <strong>To get one specific party's ledger statement:</strong>
+        fetch all vouchers for the date range, then filter client-side for any voucher whose <code>ALLLEDGERENTRIES.LIST</code> contains an entry with that party's <code>LEDGERNAME</code>. Tally has no server-side "vouchers for this ledger" collection filter that's worth the complexity.
+      </div>
+      <div class="callout warn">
+        <strong>This bare <code>TYPE=Voucher</code> Collection silently excludes Journal, Credit Note, and Debit Note</strong> — confirmed live: genuinely-committed vouchers of those types, visible in Tally's own Day Book, simply never appear in the result, with no error or indication anything was filtered. Sales/Purchase/Receipt/Payment/Contra come through fine. If you need those three types, use the <code>Voucher Register</code> report instead (<code>REPORTNAME=Voucher Register</code>, <code>Export Data</code>, with a <code>VOUCHERTYPENAME</code> static variable) — heavier (dumps every field, not just your <code>FETCH</code> list) but complete.
+      </div>
+      <div class="callout warn">
+        <strong><code>SVFROMDATE</code>/<code>SVTODATE</code> is silently ignored on this same bare Collection</strong> — a single-day range still returned the company's entire voucher history in testing. Filter by the returned <code>DATE</code> field client-side instead of trusting the server to have scoped it. (The <code>Voucher Register</code> report, unlike the Collection, does respect the date range correctly.)
+      </div>
+      <div class="callout warn">
+        <strong>Reads can lag a write by minutes, through every read path — Collection and Voucher Register alike.</strong>
+        A freshly created/altered/deleted voucher is genuinely committed (visible immediately in Tally's own GUI/Day Book) but an XML read a few seconds later can still show the pre-write state. This wasn't a bug in the read queries; it self-resolved after enough real time passed, and a full Tally restart did <em>not</em> visibly force a refresh. If you're building a UI on this API, don't depend on a re-fetch to reflect a write you just made — update your local state optimistically from what you sent instead.
+      </div>
+    </section>
+
+    <section id="writing-pattern">
+      <h2>Import Request Pattern (Write)</h2>
+      <p>Writes use a totally different envelope shape from reads: <code>IMPORTDATA</code> / <code>REQUESTDATA</code> / <code>TALLYMESSAGE</code>, with each master or voucher as a direct child carrying an <code>ACTION</code> attribute.</p>
+      <pre><code>&lt;ENVELOPE&gt;
+ &lt;HEADER&gt;
+  &lt;TALLYREQUEST&gt;Import Data&lt;/TALLYREQUEST&gt;
+ &lt;/HEADER&gt;
+ &lt;BODY&gt;
+  &lt;IMPORTDATA&gt;
+   &lt;REQUESTDESC&gt;
+    &lt;REPORTNAME&gt;All Masters&lt;/REPORTNAME&gt;
+   &lt;/REQUESTDESC&gt;
+   &lt;REQUESTDATA&gt;
+    &lt;TALLYMESSAGE xmlns:UDF="TallyUDF"&gt;
+     &lt;LEDGER NAME="Some Ledger" ACTION="Create"&gt;
+      &lt;!-- fields --&gt;
+     &lt;/LEDGER&gt;
+     &lt;!-- you can batch multiple TALLYMESSAGE children of different types
+          in one request; each gets its own ACTION --&gt;
+    &lt;/TALLYMESSAGE&gt;
+   &lt;/REQUESTDATA&gt;
+  &lt;/IMPORTDATA&gt;
+ &lt;/BODY&gt;
+&lt;/ENVELOPE&gt;</code></pre>
+      <p><code>ACTION</code> is one of <code>Create</code>, <code>Alter</code>, <code>Delete</code>, <code>Cancel</code>. The response is a flat counter block, not an echo of your data:</p>
+      <pre><code>&lt;RESPONSE&gt;
+ &lt;CREATED&gt;1&lt;/CREATED&gt;
+ &lt;ALTERED&gt;0&lt;/ALTERED&gt;
+ &lt;DELETED&gt;0&lt;/DELETED&gt;
+ &lt;ERRORS&gt;0&lt;/ERRORS&gt;
+ &lt;EXCEPTIONS&gt;0&lt;/EXCEPTIONS&gt;
+ &lt;!-- a &lt;LINEERROR&gt; tag appears here on failure, with a human-readable message --&gt;
+&lt;/RESPONSE&gt;</code></pre>
+      <div class="callout warn">
+        <strong>A "successful" response does not mean every field was saved.</strong>
+        This is the single biggest trap in Tally's Import API: an invalid or misplaced field inside a nested list is <em>silently dropped</em> — Tally still reports <code>CREATED&gt;1</code> with zero errors, but the field (and sometimes everything after it in that nested list) is just missing. <strong>Always read the record back after writing it</strong> to confirm. Every field on this page was verified this way.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-ledger">Create / Alter a Ledger</h3>
+      <pre><code>&lt;LEDGER NAME="ABC Traders" ACTION="Create"&gt;
+ &lt;LANGUAGENAME.LIST&gt;
+  &lt;NAME.LIST&gt;
+   &lt;NAME&gt;ABC Traders&lt;/NAME&gt;
+   &lt;NAME&gt;ABC&lt;/NAME&gt;               &lt;!-- alias: 2nd &lt;NAME&gt;, optional --&gt;
+  &lt;/NAME.LIST&gt;
+ &lt;/LANGUAGENAME.LIST&gt;
+ &lt;PARENT&gt;Sundry Debtors&lt;/PARENT&gt;
+ &lt;OPENINGBALANCE&gt;-32100&lt;/OPENINGBALANCE&gt;  &lt;!-- negative = Debit, see Sign Conventions --&gt;
+ &lt;ISBILLWISEON&gt;Yes&lt;/ISBILLWISEON&gt;
+ &lt;EMAIL&gt;accounts@abctraders.com&lt;/EMAIL&gt;
+ &lt;LEDGERMOBILE&gt;9999999999&lt;/LEDGERMOBILE&gt;
+ &lt;INCOMETAXNUMBER&gt;ABCDE1234F&lt;/INCOMETAXNUMBER&gt;  &lt;!-- PAN --&gt;
+
+ &lt;LEDMAILINGDETAILS.LIST&gt;
+  &lt;APPLICABLEFROM&gt;20250401&lt;/APPLICABLEFROM&gt;  &lt;!-- MUST equal company's books-from date --&gt;
+  &lt;MAILINGNAME&gt;ABC Traders&lt;/MAILINGNAME&gt;
+  &lt;ADDRESS.LIST&gt;
+   &lt;ADDRESS&gt;123 Market Street&lt;/ADDRESS&gt;
+   &lt;ADDRESS&gt;Guwahati&lt;/ADDRESS&gt;
+  &lt;/ADDRESS.LIST&gt;
+  &lt;STATE&gt;Assam&lt;/STATE&gt;
+  &lt;COUNTRY&gt;India&lt;/COUNTRY&gt;
+  &lt;PINCODE&gt;781001&lt;/PINCODE&gt;
+ &lt;/LEDMAILINGDETAILS.LIST&gt;
+
+ &lt;LEDGSTREGDETAILS.LIST&gt;
+  &lt;APPLICABLEFROM&gt;20250401&lt;/APPLICABLEFROM&gt;  &lt;!-- MUST equal company's books-from date --&gt;
+  &lt;GSTREGISTRATIONTYPE&gt;Regular&lt;/GSTREGISTRATIONTYPE&gt;
+  &lt;GSTIN&gt;18ABCDE1234F1Z5&lt;/GSTIN&gt;
+  &lt;PLACEOFSUPPLY&gt;Assam&lt;/PLACEOFSUPPLY&gt;
+ &lt;/LEDGSTREGDETAILS.LIST&gt;
+&lt;/LEDGER&gt;</code></pre>
+      <div class="callout warn">
+        <strong><code>APPLICABLEFROM</code> must be the company's actual books-from date, not "today".</strong>
+        Using an arbitrary date (e.g. the current date) causes Tally to silently drop the rest of that master's fields — no error. Read it once via <code>Company/BOOKSFROM</code> or <code>Company/STARTINGFROM</code> and reuse it for every write.
+      </div>
+      <div class="callout warn">
+        <strong>To Alter, resend the exact same shape with <code>ACTION="Alter"</code>.</strong>
+        Confirmed live: re-sending <code>LEDGSTREGDETAILS.LIST</code>/<code>LEDMAILINGDETAILS.LIST</code> with the same <code>APPLICABLEFROM</code> date cleanly <em>replaces</em> the existing entry — it does not append a duplicate dated history entry.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-stockitem">Create / Alter a Stock Item</h3>
+      <pre><code>&lt;STOCKITEM NAME="Widget A" ACTION="Create"&gt;
+ &lt;LANGUAGENAME.LIST&gt;
+  &lt;NAME.LIST&gt;&lt;NAME&gt;Widget A&lt;/NAME&gt;&lt;/NAME.LIST&gt;
+ &lt;/LANGUAGENAME.LIST&gt;
+ &lt;PARENT&gt;Hardware&lt;/PARENT&gt;
+ &lt;BASEUNITS&gt;PCS&lt;/BASEUNITS&gt;
+ &lt;ADDITIONALUNITS&gt;CASE&lt;/ADDITIONALUNITS&gt;
+ &lt;DENOMINATOR&gt;12&lt;/DENOMINATOR&gt;   &lt;!-- "1 CASE = 12 PCS" — see note below --&gt;
+ &lt;CONVERSION&gt;1&lt;/CONVERSION&gt;      &lt;!-- always 1 on the stock item side --&gt;
+ &lt;GSTTYPEOFSUPPLY&gt;Goods&lt;/GSTTYPEOFSUPPLY&gt;
+
+ &lt;OPENINGBALANCE&gt;100 PCS&lt;/OPENINGBALANCE&gt;
+ &lt;OPENINGRATE&gt;50/PCS&lt;/OPENINGRATE&gt;
+ &lt;OPENINGVALUE&gt;-5000&lt;/OPENINGVALUE&gt;  &lt;!-- negative for normal owned stock! see Sign Conventions --&gt;
+
+ &lt;HSNDETAILS.LIST&gt;
+  &lt;APPLICABLEFROM&gt;20250401&lt;/APPLICABLEFROM&gt;
+  &lt;HSNCODE&gt;39061000&lt;/HSNCODE&gt;
+  &lt;SRCOFHSNDETAILS&gt;Specify Details Here&lt;/SRCOFHSNDETAILS&gt;  &lt;!-- REQUIRED, see below --&gt;
+ &lt;/HSNDETAILS.LIST&gt;
+
+ &lt;GSTDETAILS.LIST&gt;
+  &lt;APPLICABLEFROM&gt;20250401&lt;/APPLICABLEFROM&gt;
+  &lt;TAXABILITY&gt;Taxable&lt;/TAXABILITY&gt;
+  &lt;SRCOFGSTDETAILS&gt;Specify Details Here&lt;/SRCOFGSTDETAILS&gt;   &lt;!-- REQUIRED, see below --&gt;
+  &lt;STATEWISEDETAILS.LIST&gt;
+   &lt;STATENAME&gt;&amp;#4; Any&lt;/STATENAME&gt;   &lt;!-- literal control-char prefix, see Gotchas --&gt;
+   &lt;RATEDETAILS.LIST&gt;
+    &lt;GSTRATEDUTYHEAD&gt;CGST&lt;/GSTRATEDUTYHEAD&gt;
+    &lt;GSTRATEVALUATIONTYPE&gt;Based on Value&lt;/GSTRATEVALUATIONTYPE&gt;
+    &lt;GSTRATE&gt;9&lt;/GSTRATE&gt;
+   &lt;/RATEDETAILS.LIST&gt;
+   &lt;RATEDETAILS.LIST&gt;
+    &lt;GSTRATEDUTYHEAD&gt;SGST/UTGST&lt;/GSTRATEDUTYHEAD&gt;
+    &lt;GSTRATEVALUATIONTYPE&gt;Based on Value&lt;/GSTRATEVALUATIONTYPE&gt;
+    &lt;GSTRATE&gt;9&lt;/GSTRATE&gt;
+   &lt;/RATEDETAILS.LIST&gt;
+   &lt;RATEDETAILS.LIST&gt;
+    &lt;GSTRATEDUTYHEAD&gt;IGST&lt;/GSTRATEDUTYHEAD&gt;
+    &lt;GSTRATEVALUATIONTYPE&gt;Based on Value&lt;/GSTRATEVALUATIONTYPE&gt;
+    &lt;GSTRATE&gt;18&lt;/GSTRATE&gt;
+   &lt;/RATEDETAILS.LIST&gt;
+  &lt;/STATEWISEDETAILS.LIST&gt;
+ &lt;/GSTDETAILS.LIST&gt;
+&lt;/STOCKITEM&gt;</code></pre>
+      <div class="callout warn">
+        <strong><code>SRCOFGSTDETAILS</code> (and <code>SRCOFHSNDETAILS</code>) are undocumented but required.</strong>
+        Omit <code>SRCOFGSTDETAILS</code> and the entire <code>STATEWISEDETAILS.LIST</code> — including every <code>RATEDETAILS.LIST</code> entry — is silently dropped, even though <code>TAXABILITY</code> saves fine on its own. The value Tally's own UI uses is the literal string <code>"Specify Details Here"</code>.
+      </div>
+      <div class="callout warn">
+        <strong><code>DENOMINATOR</code> / <code>CONVERSION</code> are easy to get backwards.</strong>
+        For "1 CASE = 12 PCS": <code>DENOMINATOR = 12</code> (the base-unit count), <code>CONVERSION = 1</code>. Swapping them (<code>DENOMINATOR=1, CONVERSION=12</code>) silently produces the <em>inverse</em> ratio — 100 PCS became "1200 CASE" instead of "8 CASE" in testing.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-groups">Create a Group / Stock Group / Stock Category</h3>
+      <p>All three share the same minimal shape — just swap the tag name (<code>GROUP</code>, <code>STOCKGROUP</code>, <code>STOCKCATEGORY</code>):</p>
+      <pre><code>&lt;STOCKGROUP NAME="Hardware" ACTION="Create"&gt;
+ &lt;LANGUAGENAME.LIST&gt;
+  &lt;NAME.LIST&gt;&lt;NAME&gt;Hardware&lt;/NAME&gt;&lt;/NAME.LIST&gt;
+ &lt;/LANGUAGENAME.LIST&gt;
+ &lt;PARENT&gt;&amp;#4; Primary&lt;/PARENT&gt;   &lt;!-- top-level: literal control-char prefix --&gt;
+&lt;/STOCKGROUP&gt;</code></pre>
+      <div class="callout warn">
+        <strong>Plain <code>"Primary"</code> as the parent is rejected.</strong>
+        <code>&lt;PARENT&gt;Primary&lt;/PARENT&gt;</code> fails with <code>LINEERROR: Stock Group 'Primary' does not exist!</code> — Tally requires the literal string <code>"\x04 Primary"</code> (control character 0x04, a space, then "Primary"), the same reserved-value convention as the GST "Any" state above. For a real (non-top-level) parent, just use its plain name.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-unit">Create a Unit</h3>
+      <pre><code>&lt;UNIT NAME="SET" ACTION="Create"&gt;
+ &lt;NAME&gt;SET&lt;/NAME&gt;                &lt;!-- flat &lt;NAME&gt;, NOT LANGUAGENAME.LIST — see below --&gt;
+ &lt;ISSIMPLEUNIT&gt;Yes&lt;/ISSIMPLEUNIT&gt;
+ &lt;DECIMALPLACES&gt;0&lt;/DECIMALPLACES&gt;
+ &lt;REPORTINGUQCDETAILS.LIST&gt;
+  &lt;APPLICABLEFROM&gt;20250401&lt;/APPLICABLEFROM&gt;
+  &lt;REPORTINGUQCNAME&gt;SET-SETS&lt;/REPORTINGUQCNAME&gt;
+ &lt;/REPORTINGUQCDETAILS.LIST&gt;
+&lt;/UNIT&gt;</code></pre>
+      <div class="callout warn">
+        <strong>Units are the one master type that rejects the <code>LANGUAGENAME.LIST</code> pattern.</strong>
+        Wrapping the name in <code>LANGUAGENAME.LIST/NAME.LIST</code> (which works for every other type) fails with <code>LINEERROR: BAD UNIT NAME</code> — use a flat <code>&lt;NAME&gt;</code> instead. As a consequence, Units also have <strong>no working alias mechanism</strong>: neither the flat <code>&lt;ALIAS&gt;</code> tag nor <code>NAME.LIST</code> persists one.
+      </div>
+      <div class="callout warn">
+        <strong>Unit symbols can't contain spaces.</strong>
+        <code>&lt;UNIT NAME="MY UNIT"&gt;</code> fails with <code>LINEERROR: BAD UNIT NAME</code> even with a flat <code>&lt;NAME&gt;</code>. Real Tally units are always short codes (<code>PCS</code>, <code>KGS</code>, <code>BOX</code>…).
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-rename">Renaming a Record</h3>
+      <p>The tag's <code>NAME</code> attribute identifies <em>which existing record</em> to alter — it is not "the new name". To rename, keep the attribute pointing at the <strong>old</strong> name and put the <strong>new</strong> name in the body:</p>
+      <pre><code>&lt;LEDGER NAME="ZZ Old Name" ACTION="Alter"&gt;
+ &lt;NAME&gt;ZZ New Name&lt;/NAME&gt;
+ &lt;PARENT&gt;Sundry Debtors&lt;/PARENT&gt;
+ &lt;!-- ...every other field you want to keep, same as Create... --&gt;
+&lt;/LEDGER&gt;</code></pre>
+      <div class="callout ok">
+        <strong>Confirmed live on Ledger, Stock Item, and Unit.</strong>
+        The result is a single renamed record with its GUID unchanged and all nested data (GST details, HSN, opening balances) intact — no orphaned duplicate left behind under the old name.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-delete">Deleting a Record</h3>
+      <pre><code>&lt;LEDGER NAME="ZZ Test" ACTION="Delete"&gt;
+ &lt;NAME&gt;ZZ Test&lt;/NAME&gt;
+&lt;/LEDGER&gt;</code></pre>
+      <p>Works the same way for every master type. Deletion fails (with a <code>LINEERROR</code>) if the record is referenced elsewhere — e.g. a ledger with posted vouchers, or a group with ledgers still under it.</p>
+    </section>
+
+    <section>
+      <h3 id="write-voucher-simple">Create a Voucher — simple types <span class="badge">Payment / Receipt / Contra / Journal</span></h3>
+      <p>Vouchers use the same <code>IMPORTDATA</code> envelope as masters, but the <code>REPORTNAME</code> must be <code>Vouchers</code> — <code>"All Masters"</code> (which works fine for every master type above) does not. For accounting-only voucher types with no items involved, a hand-built minimal body works reliably:</p>
+      <pre><code>&lt;VOUCHER VCHTYPE="Journal" ACTION="Create"&gt;
+ &lt;DATE&gt;20260401&lt;/DATE&gt;                        &lt;!-- YYYYMMDD, same as every master date --&gt;
+ &lt;VOUCHERTYPENAME&gt;Journal&lt;/VOUCHERTYPENAME&gt;
+ &lt;PERSISTEDVIEW&gt;Accounting Voucher View&lt;/PERSISTEDVIEW&gt;  &lt;!-- required --&gt;
+ &lt;NARRATION&gt;Being expense accrual&lt;/NARRATION&gt;
+ &lt;ALLLEDGERENTRIES.LIST&gt;
+  &lt;LEDGERNAME&gt;Rent Expense&lt;/LEDGERNAME&gt;
+  &lt;ISDEEMEDPOSITIVE&gt;Yes&lt;/ISDEEMEDPOSITIVE&gt;   &lt;!-- Yes = Debit --&gt;
+  &lt;AMOUNT&gt;-5000&lt;/AMOUNT&gt;                     &lt;!-- negative on the Debit side --&gt;
+ &lt;/ALLLEDGERENTRIES.LIST&gt;
+ &lt;ALLLEDGERENTRIES.LIST&gt;
+  &lt;LEDGERNAME&gt;Outstanding Liabilities&lt;/LEDGERNAME&gt;
+  &lt;ISDEEMEDPOSITIVE&gt;No&lt;/ISDEEMEDPOSITIVE&gt;    &lt;!-- No = Credit --&gt;
+  &lt;AMOUNT&gt;5000&lt;/AMOUNT&gt;                      &lt;!-- positive on the Credit side --&gt;
+ &lt;/ALLLEDGERENTRIES.LIST&gt;
+&lt;/VOUCHER&gt;</code></pre>
+      <p>Works exactly the same for <code>VCHTYPE="Payment"</code>, <code>"Receipt"</code>, <code>"Contra"</code> — just add a <code>&lt;PARTYLEDGERNAME&gt;</code> tag if there's a natural party. No GST/status scaffolding is needed for these — unlike Sales/Purchase (next section), the request above is genuinely sufficient by itself.</p>
+      <div class="callout warn">
+        <strong>The misleading <code>LINEERROR: Voucher date is missing ... retry Split</code> error is <em>not</em> about a missing date field.</strong>
+        Two completely unrelated causes produce this exact same message:
+        <ol style="margin:8px 0 0;">
+          <li>A <strong>license/edition date cutoff</strong> — a TallyPrime EDU (free/educational) installation only accepts voucher dates up to a fixed point tied to the license; every date after that fails with this error, for every voucher type, including the plain Journal example above. Bisect a working date (e.g. today minus 30/60/90 days) before assuming your XML shape is wrong.</li>
+          <li>For <strong>Sales/Purchase/Credit Note/Debit Note</strong> specifically: missing GST context fields — see the next section. Here the date itself is fine; Tally's GST "Split" computation is failing for an unrelated reason and surfaces the same generic text.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-voucher-item">Create a Voucher — item-invoice types <span class="badge">Sales / Purchase</span></h3>
+      <div class="callout warn">
+        <strong>A hand-built minimal XML body does NOT work for Sales/Purchase, no matter how many fields you add.</strong>
+        This is the single most time-consuming finding on this page. Item-invoice vouchers (<code>PERSISTEDVIEW=Invoice Voucher View</code>) run through Tally's GST "Split" computation, which needs a large web of company/party GST context fields (party GSTIN/state/address, the company's own GST registration, <code>VCHENTRYMODE</code>, several tax-adjustment status fields...). Adding every field visible in a real export — all of them, individually confirmed relevant — still wasn't enough; the request kept getting silently rejected (<code>EXCEPTIONS&gt;1</code>, usually with <em>no</em> error text at all).
+      </div>
+      <p>The only approach confirmed to work reliably: <strong>clone a real existing voucher of that type</strong> and substitute values into it, keeping its ~150 other fields byte-for-byte as Tally itself wrote them.</p>
+      <ol>
+        <li>Export one real voucher of the target type (<code>REPORTNAME=Voucher Register</code>, <code>VOUCHERTYPENAME</code> static variable, a <strong>single-day</strong> date range — see the performance warning below) and grab its full <code>&lt;VOUCHER&gt;...&lt;/VOUCHER&gt;</code> block as raw text.</li>
+        <li>Strip the <code>REMOTEID="..."</code> and <code>VCHKEY="..."</code> attributes from the opening tag (leaving them in causes Tally to silently <code>Create</code> a duplicate instead of matching the intended record — relevant for editing too, see below).</li>
+        <li>String-replace (not an XML-tree re-serialize — see gotcha below) the specific tags that need to change: <code>DATE</code>, <code>EFFECTIVEDATE</code>, <code>VCHSTATUSDATE</code>, <code>NARRATION</code>, the party's name/GSTIN/state/pincode/address fields, and remove <code>VOUCHERNUMBER</code> entirely so Tally auto-assigns the next one (keeping the cloned number verbatim creates a duplicate voucher number).</li>
+        <li>Strip every original <code>&lt;ALLINVENTORYENTRIES.LIST&gt;</code> and <code>&lt;LEDGERENTRIES.LIST&gt;</code> block and rebuild your own for the new items/party (shape below) — everything else in the template stays untouched.</li>
+      </ol>
+      <pre><code>&lt;!-- rebuilt item block, inserted where the template's originals were --&gt;
+&lt;ALLINVENTORYENTRIES.LIST&gt;
+ &lt;STOCKITEMNAME&gt;Widget A&lt;/STOCKITEMNAME&gt;
+ &lt;ISDEEMEDPOSITIVE&gt;No&lt;/ISDEEMEDPOSITIVE&gt;   &lt;!-- Sales: No (Credit). Purchase: Yes (Debit). --&gt;
+ &lt;RATE&gt;100/PCS&lt;/RATE&gt;
+ &lt;AMOUNT&gt;200&lt;/AMOUNT&gt;                      &lt;!-- Sales: positive. Purchase: negative. See Sign Conventions. --&gt;
+ &lt;ACTUALQTY&gt;2 PCS&lt;/ACTUALQTY&gt;               &lt;!-- qty stays POSITIVE regardless of direction --&gt;
+ &lt;BILLEDQTY&gt;2 PCS&lt;/BILLEDQTY&gt;
+ &lt;ACCOUNTINGALLOCATIONS.LIST&gt;               &lt;!-- REQUIRED nested block, not a flat top-level entry --&gt;
+  &lt;LEDGERNAME&gt;Sales Account&lt;/LEDGERNAME&gt;
+  &lt;ISDEEMEDPOSITIVE&gt;No&lt;/ISDEEMEDPOSITIVE&gt;
+  &lt;AMOUNT&gt;200&lt;/AMOUNT&gt;
+ &lt;/ACCOUNTINGALLOCATIONS.LIST&gt;
+&lt;/ALLINVENTORYENTRIES.LIST&gt;
+
+&lt;!-- party entry - note the tag name Tally's own export uses here is
+     LEDGERENTRIES.LIST, not ALLLEDGERENTRIES.LIST (which is what the
+     simple voucher types above use) --&gt;
+&lt;LEDGERENTRIES.LIST&gt;
+ &lt;LEDGERNAME&gt;Some Customer&lt;/LEDGERNAME&gt;
+ &lt;ISDEEMEDPOSITIVE&gt;Yes&lt;/ISDEEMEDPOSITIVE&gt;   &lt;!-- Sales: Yes (party Dr). Purchase: No (party Cr). --&gt;
+ &lt;AMOUNT&gt;-200&lt;/AMOUNT&gt;
+&lt;/LEDGERENTRIES.LIST&gt;</code></pre>
+      <div class="callout warn">
+        <strong>Never fetch the template with a wide date range on a high-volume voucher type.</strong>
+        <code>Voucher Register</code> dumps every field for every match — the same wildcard-fetch trap as Stock Items (see Gotchas). Querying a full financial year of Sales (1000+ vouchers) hung the XML server for several minutes and needed a Tally restart to recover. Always scope this export to a single day: find one voucher's date cheaply first (a lean Collection query), then re-fetch just that day in full detail.
+      </div>
+      <div class="callout warn">
+        <strong>This only works for a voucher type the company already has at least one real example of.</strong> There's no way to clone-and-substitute for a type with zero existing vouchers (e.g. Credit Note/Debit Note in a company that's never used them) — you'd need to manually enumerate the full GST scaffolding from Tally's own documentation or a different reference company, neither of which was attempted here.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-voucher-edit">Editing a Voucher <span class="badge">ACTION=Alter</span></h3>
+      <p>Vouchers have no <code>NAME</code> attribute to key off — Tally itself calls them "unnamed" objects. Identification for <code>Alter</code>/<code>Delete</code> is a completely different mechanism from every master type above: attributes on the <code>&lt;VOUCHER&gt;</code> tag itself, <strong>not</strong> a body field.</p>
+      <pre><code>&lt;VOUCHER DATE="02-Apr-2026" TAGNAME="Master Id" TAGVALUE="6491"
+         VCHTYPE="Sales" ACTION="Alter"&gt;
+ &lt;!-- full body, same shape as Create --&gt;
+&lt;/VOUCHER&gt;</code></pre>
+      <table>
+        <tr><th>Attribute</th><th>Notes</th></tr>
+        <tr><td><code>DATE</code></td><td>the voucher's <strong>current</strong> date, format <code>dd-MMM-yyyy</code> (e.g. <code>"02-Apr-2026"</code>) — <strong>different</strong> from the nested <code>&lt;DATE&gt;</code> field's <code>YYYYMMDD</code> format used everywhere else.</td></tr>
+        <tr><td><code>TAGNAME</code></td><td>which identifier <code>TAGVALUE</code> is. Tally's docs list <code>"Master Id"</code>, <code>"Voucher Number"</code>, <code>"Reference"</code>, <code>"Narration"</code> as valid options.</td></tr>
+        <tr><td><code>TAGVALUE</code></td><td>the identifier's value.</td></tr>
+      </table>
+      <div class="callout warn">
+        <strong>Use <code>TAGNAME="Master Id"</code>, not <code>"Voucher Number"</code>.</strong>
+        <code>"Voucher Number"</code> works fine for simple sequentially-numbered types (Journal, Contra) but silently no-ops for a voucher under "Automatic (Manual Override)" numbering (Sales/Purchase) — the response reports <code>ALTERED&gt;1</code>/<code>DELETED&gt;1</code> with no error, but nothing actually changes. <code>MASTERID</code> (Tally's own true internal id — fetch it via a <code>MASTERID</code> <code>&lt;FETCH&gt;</code> on the read side) worked reliably across every voucher type tried.
+      </div>
+      <div class="callout warn">
+        <strong><code>REMOTEID</code>/<code>VCHKEY</code> do NOT work for identification at all</strong> — every attempt against them fails with <code>LINEERROR: Voucher does not exist!</code>, even quoting them back exactly as Tally's own export showed, including after a full Tally restart. They're export-only fields, not a valid lookup key for Import.
+      </div>
+      <div class="callout warn">
+        <strong>If cloning the voucher's own XML to edit it (Sales/Purchase — same technique as Create above), you MUST strip <code>REMOTEID</code>/<code>VCHKEY</code> from the clone before submitting.</strong>
+        Leaving them in makes Tally silently <code>Create</code> a duplicate voucher instead of matching-and-altering the original — <code>TAGNAME</code>/<code>TAGVALUE</code> gets ignored in favor of (broken) <code>REMOTEID</code> matching. Confirmed live: same symptom either way (a new voucher with the original's data, response says <code>CREATED&gt;1</code> not <code>ALTERED&gt;1</code>) whether editing a simple or item-invoice type.
+      </div>
+    </section>
+
+    <section>
+      <h3 id="write-voucher-delete">Deleting a Voucher <span class="badge">ACTION=Delete</span></h3>
+      <pre><code>&lt;VOUCHER DATE="02-Apr-2026" TAGNAME="Master Id" TAGVALUE="6491"
+         VCHTYPE="Contra" ACTION="Delete"&gt;
+&lt;/VOUCHER&gt;</code></pre>
+      <p>Same identification rules as Alter above (use <code>Master Id</code>, include the empty body). Response on success: <code>&lt;DELETED&gt;1&lt;/DELETED&gt;</code>. Confirmed to actually remove the record — verified via re-read through both the fast Collection query and the <code>Voucher Register</code> report, and visually in Tally's own Day Book.</p>
+    </section>
+
+    <section id="sign-conventions">
+      <h2>Sign Conventions</h2>
+      <p>Tally is <strong>not consistent</strong> about what a negative number means across different fields. These were each individually verified against real data — don't assume one applies to the other.</p>
+      <table>
+        <tr><th>Field</th><th>Negative means</th><th>Positive means</th><th>Verified via</th></tr>
+        <tr>
+          <td><code>LEDGER.OPENINGBALANCE</code> /<br><code>LEDGER.CLOSINGBALANCE</code></td>
+          <td>Debit</td>
+          <td>Credit</td>
+          <td>Created a ledger with <code>+1000</code>, Tally's own <strong>Group Summary</strong> report placed it in the Credit column.</td>
+        </tr>
+        <tr>
+          <td><code>VOUCHER</code> → <code>ALLLEDGERENTRIES.LIST/AMOUNT</code></td>
+          <td>Debit</td>
+          <td>Credit</td>
+          <td>Same convention as above — matches: a Sales invoice's customer entry is negative (Dr, receivable increases); Sales/Tax entries are positive (Cr).</td>
+        </tr>
+        <tr>
+          <td><code>STOCKITEM.OPENINGVALUE</code> /<br><code>STOCKITEM.CLOSINGVALUE</code></td>
+          <td><strong>Normal</strong> (for owned, positive-quantity stock)</td>
+          <td>Unusual / negative-quantity stock</td>
+          <td>Every real stock item in a live company file has a negative value for its normal on-hand stock. Writing a positive value creates data Tally's own UI flags with a <code>(-)</code> marker as inconsistent.</td>
+        </tr>
+        <tr>
+          <td>Voucher <code>ALLINVENTORYENTRIES.LIST</code>/<code>AMOUNT</code> and its nested <code>ACCOUNTINGALLOCATIONS.LIST</code>/<code>AMOUNT</code> (Sales/Purchase item lines)</td>
+          <td>Debit side (Purchase: <code>ISDEEMEDPOSITIVE=Yes</code>)</td>
+          <td>Credit side (Sales: <code>ISDEEMEDPOSITIVE=No</code>)</td>
+          <td>Same Dr(-)/Cr(+) rule as the plain ledger-entry row above — <strong>does not</strong> follow the Stock Item master's "negative = owned" convention, despite both being about stock. Quantity (<code>ACTUALQTY</code>/<code>BILLEDQTY</code>) stays positive either way; only <code>AMOUNT</code> is signed. Verified against real Sales (credit, positive) and Purchase (debit, negative) exports.</td>
+        </tr>
+      </table>
+      <div class="callout warn">
+        <strong>The Ledger, Voucher-ledger-entry, and Voucher-item-entry conventions all agree with each other (Dr = negative); the Stock Item master's <code>OPENINGVALUE</code>/<code>CLOSINGVALUE</code> is the one exception, and does not follow the same rule "backwards" either — it's its own thing.</strong>
+        Don't infer one from another. If you're unsure, write a test record, read it back through a <em>human-readable native report</em> (like Group Summary or Day Book) — not just the raw Collection field — and check which column/label Tally itself puts it under.
+      </div>
+    </section>
+
+    <section id="gotchas">
+      <h2>Gotchas &amp; Quirks — Quick Index</h2>
+      <ol>
+        <li><strong>Silent failures on write.</strong> A "successful" <code>CREATED&gt;1</code> response can still have silently dropped fields. Always read back what you wrote.</li>
+        <li><strong>History-tracked nested lists need <code>APPLICABLEFROM</code>.</strong> <code>LEDMAILINGDETAILS.LIST</code>, <code>LEDGSTREGDETAILS.LIST</code>, <code>HSNDETAILS.LIST</code>, <code>GSTDETAILS.LIST</code>, <code>REPORTINGUQCDETAILS.LIST</code> all need this date, and it must equal the company's actual books-from date — not "today".</li>
+        <li><strong>Alias = 2nd <code>&lt;NAME&gt;</code> in <code>NAME.LIST</code>,</strong> not a flat <code>&lt;ALIAS&gt;</code> tag — except Units, which support no alias mechanism at all.</li>
+        <li><strong>Reserved values need a literal control character.</strong> "Applies to all states" is the literal string <code>"\x04 Any"</code> (0x04 + space + "Any"); a top-level group's parent is <code>"\x04 Primary"</code>. Plain text without the control character is rejected outright (not silently dropped — you get a <code>LINEERROR</code>).</li>
+        <li><strong><code>SRCOFGSTDETAILS</code> / <code>SRCOFHSNDETAILS</code></strong> are undocumented-but-required fields inside <code>GSTDETAILS.LIST</code> / <code>HSNDETAILS.LIST</code> — omit them and the whole rate/HSN block is dropped.</li>
+        <li><strong>Company's own GSTIN lives on a separate <code>TAXUNIT</code> object</strong>, not on <code>Company</code> itself (<code>Company/GSTREGISTRATIONNUMBER</code> is reliably empty in TallyPrime 5+).</li>
+        <li><strong>Company's address is <code>REMOTEFULLLISTNAME</code></strong> (one flattened comma-joined string) — <code>ADDRESS.LIST</code> only works for Ledgers.</li>
+        <li><strong>Party GSTIN is under <code>LEDGSTREGDETAILS.LIST/GSTIN</code>,</strong> not the flat (legacy, always-empty) <code>PARTYGSTIN</code> field.</li>
+        <li><strong>Stock item alt-unit ratio is <code>DENOMINATOR</code>/<code>CONVERSION</code> on the item itself</strong> — the Unit master's own same-named fields are for genuine compound units and are unrelated.</li>
+        <li><strong>Unit names can't contain spaces</strong> and reject the <code>NAME.LIST</code> alias pattern that every other master accepts.</li>
+        <li><strong>Rename ≠ edit-then-save.</strong> The tag's <code>NAME</code> attribute must stay the <em>old</em> name to identify the record; the new name goes in the body.</li>
+        <li><strong>Ledger's live state is often on <code>PRIORSTATENAME</code>, not <code>STATENAME</code>.</strong> Fetch both and fall back.</li>
+        <li><strong>Wildcard <code>FETCH *</code> + date range on <code>StockItem</code> can hang the XML server</strong> for a minute or more across a large item catalog. Never combine them.</li>
+        <li><strong>Vouchers need <code>REPORTNAME=Vouchers</code> for Import, not <code>"All Masters"</code>.</strong></li>
+        <li><strong><code>LINEERROR: Voucher date is missing ... retry Split</code> is almost never about a missing date.</strong> It's the generic error for two unrelated causes: a TallyPrime EDU license's date cutoff (affects every voucher type identically), or missing GST context on a Sales/Purchase voucher. See <a href="#write-voucher-simple">Create a Voucher</a>.</li>
+        <li><strong>Sales/Purchase can't be hand-built from a minimal field set, ever.</strong> Clone a real voucher of that type and substitute values in — see <a href="#write-voucher-item">Create a Voucher (Sales/Purchase)</a>.</li>
+        <li><strong>Voucher Alter/Delete identification is <code>TAGNAME</code>/<code>TAGVALUE</code> attributes on the tag</strong>, not the <code>NAME</code> attribute masters use, and not <code>REMOTEID</code>/<code>VCHKEY</code> (which reliably fail with <code>"Voucher does not exist!"</code>). Use <code>TAGNAME="Master Id"</code> — <code>"Voucher Number"</code> silently no-ops for Sales/Purchase's numbering style.</li>
+        <li><strong>A string-substitution regex like <code>&lt;TAG&gt;.*?&lt;/TAG&gt;</code> won't match Tally's self-closing empty tags</strong> (<code>&lt;NARRATION/&gt;</code>) — if you're cloning-and-substituting XML text rather than using a proper XML parser, match <code>&lt;TAG&gt;.*?&lt;/TAG&gt;|&lt;TAG/&gt;</code> or the substitution silently no-ops whenever the template's original value was empty.</li>
+        <li><strong>Leaving a cloned voucher's <code>REMOTEID</code>/<code>VCHKEY</code> in place for an Alter makes Tally silently <code>Create</code> a duplicate instead</strong> — strip both before submitting, for Create <em>and</em> Alter.</li>
+      </ol>
+    </section>
+
+    <section id="field-tables">
+      <h2>Field Tables — Quick Copy Reference</h2>
+
+      <h3>Ledger — read fields</h3>
+      <table class="field-table">
+        <tr><th>Field</th><th>Notes</th></tr>
+        <tr><td>NAME</td><td>attribute on the tag, and the primary <code>NAME.LIST</code> entry</td></tr>
+        <tr><td>PARENT</td><td>the "Under" group</td></tr>
+        <tr><td>ADDRESS.LIST</td><td>multi-line, each line an <code>&lt;ADDRESS&gt;</code></td></tr>
+        <tr><td>PRIORSTATENAME</td><td>reliable state field (STATE is often blank)</td></tr>
+        <tr><td>PINCODE, COUNTRYNAME, LEDGERMOBILE, EMAIL</td><td>flat fields</td></tr>
+        <tr><td>INCOMETAXNUMBER</td><td>PAN</td></tr>
+        <tr><td>LEDGSTREGDETAILS.LIST/GSTIN</td><td>real GSTIN (not PARTYGSTIN)</td></tr>
+        <tr><td>OPENINGBALANCE, CLOSINGBALANCE</td><td>signed amount — negative = Dr</td></tr>
+        <tr><td>ISBILLWISEON</td><td>Yes/No</td></tr>
+        <tr><td>GUID</td><td>stable identifier: <code>{companyGUID}-{hex}</code></td></tr>
+      </table>
+
+      <h3>Stock Item — read fields</h3>
+      <table class="field-table">
+        <tr><th>Field</th><th>Notes</th></tr>
+        <tr><td>BASEUNITS, ADDITIONALUNITS</td><td>unit symbols</td></tr>
+        <tr><td>DENOMINATOR</td><td>alt-unit ratio (e.g. 12 for "1 CASE = 12 PCS")</td></tr>
+        <tr><td>OPENINGBALANCE / CLOSINGBALANCE</td><td>formatted string, e.g. <code>"180 PCS = 15 CASE"</code></td></tr>
+        <tr><td>OPENINGVALUE / CLOSINGVALUE</td><td>negative = normal owned stock</td></tr>
+        <tr><td>OPENINGRATE</td><td>formatted string, e.g. <code>"201.40/PCS"</code></td></tr>
+        <tr><td>HSNDETAILS.LIST/HSNCODE</td><td>HSN/SAC code</td></tr>
+        <tr><td>GSTDETAILS.LIST/TAXABILITY</td><td>Taxable / Exempt / Nil Rated</td></tr>
+        <tr><td>…/STATEWISEDETAILS.LIST/RATEDETAILS.LIST</td><td>repeated per duty head — CGST/SGST/UTGST/IGST/Cess</td></tr>
+      </table>
+
+      <h3>Voucher — read fields</h3>
+      <table class="field-table">
+        <tr><th>Field</th><th>Notes</th></tr>
+        <tr><td>DATE</td><td>YYYYMMDD</td></tr>
+        <tr><td>VOUCHERTYPENAME, VCHTYPE</td><td>VCHTYPE (tag attribute) is the more reliable of the two</td></tr>
+        <tr><td>VOUCHERNUMBER</td><td>display number, not a reliable identifier for Alter/Delete</td></tr>
+        <tr><td>MASTERID</td><td>Tally's true internal id — the reliable identifier for Alter/Delete via <code>TAGNAME="Master Id"</code></td></tr>
+        <tr><td>PARTYLEDGERNAME</td><td>flat field</td></tr>
+        <tr><td>ALLLEDGERENTRIES.LIST</td><td>LEDGERNAME, AMOUNT (signed, Dr=negative) — simple voucher types</td></tr>
+        <tr><td>ALLINVENTORYENTRIES.LIST</td><td>STOCKITEMNAME, BILLEDQTY, RATE, AMOUNT — Sales/Purchase item lines</td></tr>
+        <tr><td>GUID</td><td>stable identifier: <code>{companyGUID}-{hex}</code></td></tr>
+      </table>
+
+      <h3>Date formats — there are two, not one</h3>
+      <p>Almost every Tally date in XML is <code>YYYYMMDD</code> with no separators, e.g. <code>20250401</code> for 1 April 2025 — this covers every master field and a voucher's own nested <code>&lt;DATE&gt;</code> field. The <strong>one exception</strong>: the <code>DATE</code> <em>attribute</em> used to identify an existing voucher for <code>Alter</code>/<code>Delete</code> (alongside <code>TAGNAME</code>/<code>TAGVALUE</code>) is <code>dd-MMM-yyyy</code>, e.g. <code>"02-Apr-2026"</code> — see <a href="#write-voucher-edit">Editing a Voucher</a>.</p>
+    </section>
+
+    <footer>
+      Compiled from live testing against a real TallyPrime instance. Field names and required sub-fields can vary across Tally versions — treat this as a strong starting point, not a guarantee, and always verify writes by reading the record back.
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // Highlight the sidebar link for whichever section is currently in view.
+  const links = Array.from(document.querySelectorAll('.sidebar a'));
+  const targets = links
+    .map((a) => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+
+  function onScroll() {
+    let activeIdx = 0;
+    const scrollPos = window.scrollY + 100;
+    targets.forEach((el, i) => {
+      if (el.offsetTop <= scrollPos) activeIdx = i;
+    });
+    links.forEach((a, i) => a.classList.toggle('active', i === activeIdx));
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+</body>
+</html>

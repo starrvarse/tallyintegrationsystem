@@ -1,0 +1,331 @@
+:root,
+[data-theme="aqua"] {
+  /* Aqua Mint Glassmorphic Palette */
+  --primary: #00CACE;
+  --primary-dark: #01A5BA;
+  --secondary: #91EBD8;
+  --secondary-light: #BFF7ED;
+  --accent: #4EC4CC;
+  --success: #7EDC00;
+  --bg: #A9F1E5;
+  --surface: #FFFFFF;
+  --surface-soft: #F1FEFB;
+  --text-primary: #283939;
+  --text-secondary: #597573;
+  --text-muted: #7A9996;
+  --border: #D5F4EE;
+
+  /* Aliases for legacy & functional selectors */
+  --text: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --accent-bg: rgba(0, 202, 206, 0.12);
+  --row-hover: rgba(145, 235, 216, 0.22);
+  --header-bg: #F1FEFB;
+  --negative: #e53935;
+  --positive: var(--success);
+
+  /* Soft Glassmorphism Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-bg-soft: rgba(241, 254, 251, 0.9);
+  --glass-bg-card: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(213, 244, 238, 0.85);
+  --glass-border-subtle: rgba(255, 255, 255, 0.7);
+  --glass-blur: blur(14px);
+  --glass-blur-sm: blur(8px);
+  --glass-blur-lg: blur(20px);
+
+  /* Elevation Shadows with aqua tint */
+  --shadow-sm: 0 2px 8px -2px rgba(1, 165, 186, 0.08), 0 1px 3px rgba(40, 57, 57, 0.04);
+  --shadow: 0 8px 24px -6px rgba(1, 165, 186, 0.12), 0 2px 6px rgba(40, 57, 57, 0.03);
+  --shadow-lg: 0 20px 45px -12px rgba(1, 165, 186, 0.22), 0 6px 18px rgba(40, 57, 57, 0.06);
+  --shadow-glow: 0 0 24px rgba(0, 202, 206, 0.35);
+
+  /* Scrollbars */
+  --scrollbar-thumb: rgba(1, 165, 186, 0.25);
+  --scrollbar-thumb-hover: rgba(0, 202, 206, 0.45);
+
+  /* Background Gradient */
+  --body-bg: 
+    radial-gradient(1200px circle at 5% 0%, rgba(145, 235, 216, 0.6) 0%, transparent 50%),
+    radial-gradient(900px circle at 95% 10%, rgba(191, 247, 237, 0.7) 0%, transparent 45%),
+    radial-gradient(1000px circle at 85% 90%, rgba(78, 196, 204, 0.35) 0%, transparent 50%),
+    radial-gradient(800px circle at 15% 95%, rgba(145, 235, 216, 0.5) 0%, transparent 45%),
+    linear-gradient(135deg, #A9F1E5 0%, #BFF7ED 35%, #F1FEFB 70%, #91EBD8 100%);
+
+  --input-bg: #ffffff;
+  --btn-gradient: linear-gradient(135deg, #00CACE 0%, #01A5BA 100%);
+  --btn-shadow: 0 4px 14px rgba(0, 202, 206, 0.32);
+  --btn-shadow-hover: 0 6px 20px rgba(0, 202, 206, 0.44);
+  --card-bg: rgba(255, 255, 255, 0.88);
+  --modal-bg: rgba(255, 255, 255, 0.96);
+  --dropdown-bg: rgba(255, 255, 255, 0.98);
+  --pill-bg: linear-gradient(135deg, rgba(0, 202, 206, 0.12) 0%, rgba(145, 235, 216, 0.22) 100%);
+  --pill-border: rgba(0, 202, 206, 0.25);
+  --pill-color: var(--primary-dark);
+
+  color-scheme: light;
+}
+
+[data-theme="purple"] {
+  /* Deep Purple / Cyberpunk Glassmorphic Palette */
+  --primary: #FF00C8;        /* Electric Magenta - Buttons, active states, highlights */
+  --primary-dark: #FF1493;   /* Hot Pink - Glow effects and emphasis */
+  --secondary: #504080;      /* Purple - Glass cards / surfaces */
+  --secondary-light: #604890;/* Muted Violet - Highlights & secondary surfaces */
+  --accent: #A855F7;         /* Violet - Charts, selected elements */
+  --accent-orange: #FF9A3C;  /* Orange - Gradient highlights */
+  --accent-coral: #FF4D6D;   /* Coral/Red - Positive/attention indicators */
+  --success: #FF4D6D;        /* Positive/attention indicators */
+  --bg: #302060;             /* Deep Purple - Main background */
+  --surface: #202050;        /* Midnight Navy - Cards, panels, navigation */
+  --surface-soft: #2e245a;   /* Elevated midnight purple surface */
+  --text-primary: #FFFFFF;   /* White - Headings and important numbers */
+  --text-secondary: #D8D2EA; /* Light Lavender - Labels and descriptions */
+  --text-muted: #9D96B8;     /* Purple Gray - Less important information */
+  --border: rgba(96, 72, 144, 0.65); /* Muted Violet border */
+
+  /* Aliases for legacy & functional selectors */
+  --text: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --accent-bg: rgba(255, 0, 200, 0.18);
+  --row-hover: rgba(168, 85, 247, 0.22);
+  --header-bg: #262052;
+  --negative: #ff5252;
+  --positive: #00e676;
+
+  /* Glassmorphism in Dark Mode */
+  --glass-bg: rgba(32, 32, 80, 0.88);
+  --glass-bg-soft: rgba(46, 36, 90, 0.92);
+  --glass-bg-card: rgba(38, 30, 80, 0.88);
+  --glass-border: rgba(96, 72, 144, 0.6);
+  --glass-border-subtle: rgba(168, 85, 247, 0.35);
+  --glass-blur: blur(16px);
+  --glass-blur-sm: blur(10px);
+  --glass-blur-lg: blur(24px);
+
+  /* Shadows with Neon Magenta/Pink Glow */
+  --shadow-sm: 0 2px 10px -2px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 0, 200, 0.08);
+  --shadow: 0 10px 30px -6px rgba(0, 0, 0, 0.55), 0 0 24px rgba(255, 20, 147, 0.16);
+  --shadow-lg: 0 25px 55px -12px rgba(0, 0, 0, 0.75), 0 0 35px rgba(255, 0, 200, 0.28);
+  --shadow-glow: 0 0 28px rgba(255, 0, 200, 0.5);
+
+  /* Scrollbars */
+  --scrollbar-thumb: rgba(168, 85, 247, 0.35);
+  --scrollbar-thumb-hover: rgba(255, 0, 200, 0.65);
+
+  /* Deep Purple Ambient Mesh Background */
+  --body-bg: 
+    radial-gradient(1200px circle at 10% 5%, rgba(168, 85, 247, 0.26) 0%, transparent 45%),
+    radial-gradient(900px circle at 90% 15%, rgba(255, 0, 200, 0.22) 0%, transparent 45%),
+    radial-gradient(1000px circle at 85% 90%, rgba(255, 154, 60, 0.18) 0%, transparent 50%),
+    radial-gradient(800px circle at 15% 95%, rgba(255, 20, 147, 0.22) 0%, transparent 45%),
+    linear-gradient(135deg, #302060 0%, #251a4e 50%, #202050 100%);
+
+  --input-bg: rgba(32, 32, 80, 0.85);
+  --btn-gradient: linear-gradient(135deg, #FF00C8 0%, #FF1493 50%, #FF9A3C 100%);
+  --btn-shadow: 0 4px 18px rgba(255, 0, 200, 0.45);
+  --btn-shadow-hover: 0 6px 26px rgba(255, 0, 200, 0.65);
+  --card-bg: rgba(32, 32, 80, 0.9);
+  --modal-bg: rgba(32, 32, 80, 0.97);
+  --dropdown-bg: rgba(32, 32, 80, 0.98);
+  --pill-bg: linear-gradient(135deg, rgba(255, 0, 200, 0.2) 0%, rgba(168, 85, 247, 0.25) 100%);
+  --pill-border: rgba(255, 0, 200, 0.4);
+  --pill-color: #FF00C8;
+
+  color-scheme: dark;
+}
+
+[data-theme="crimson"] {
+  /* Crimson Navy / Bright Red & Dark Navy Palette */
+  --primary: #FF3B43;        /* Bright Red - Header, buttons, main branding */
+  --primary-dark: #102B45;   /* Dark Navy - Main text, charts, illustrations */
+  --secondary: #FFFFFF;      /* White - Cards and main surfaces */
+  --secondary-light: #F5F7F8;/* Very Light Gray - Backgrounds and inactive areas */
+  --accent: #FF5A5F;         /* Coral Red - Active controls, highlights */
+  --success: #36B37E;        /* Green - Positive/status indicators */
+  --bg: #F5F7F8;             /* Very Light Gray - Main background */
+  --surface: #FFFFFF;        /* White - Cards and main surfaces */
+  --surface-soft: #F5F7F8;   /* Inactive areas, headers */
+  --text-primary: #102B45;   /* Dark Navy - Main text */
+  --text-secondary: #7A858E; /* Gray - Supporting text */
+  --text-muted: #9AA5AE;     /* Light Slate - Less important information */
+  --border: #DDE3E7;         /* Light Gray - Card/input borders */
+
+  /* Aliases for legacy & functional selectors */
+  --text: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --accent-bg: rgba(255, 59, 67, 0.12);
+  --row-hover: rgba(255, 59, 67, 0.05);
+  --header-bg: #FFFFFF;
+  --negative: #e53935;
+  --positive: var(--success);
+
+  /* Soft Glassmorphism Tokens */
+  --glass-bg: rgba(255, 255, 255, 0.92);
+  --glass-bg-soft: rgba(245, 247, 248, 0.94);
+  --glass-bg-card: rgba(255, 255, 255, 0.94);
+  --glass-border: rgba(221, 227, 231, 0.9);
+  --glass-border-subtle: rgba(221, 227, 231, 0.65);
+  --glass-blur: blur(14px);
+  --glass-blur-sm: blur(8px);
+  --glass-blur-lg: blur(20px);
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 2px 8px -2px rgba(16, 43, 69, 0.08), 0 1px 3px rgba(16, 43, 69, 0.04);
+  --shadow: 0 8px 24px -6px rgba(16, 43, 69, 0.1), 0 2px 6px rgba(16, 43, 69, 0.03);
+  --shadow-lg: 0 20px 45px -12px rgba(16, 43, 69, 0.18), 0 6px 18px rgba(16, 43, 69, 0.06);
+  --shadow-glow: 0 0 24px rgba(255, 59, 67, 0.35);
+
+  /* Scrollbars */
+  --scrollbar-thumb: rgba(16, 43, 69, 0.2);
+  --scrollbar-thumb-hover: rgba(255, 59, 67, 0.5);
+
+  /* Clean Crisp Ambient Background */
+  --body-bg: 
+    radial-gradient(1200px circle at 5% 0%, rgba(255, 59, 67, 0.08) 0%, transparent 45%),
+    radial-gradient(900px circle at 95% 10%, rgba(16, 43, 69, 0.06) 0%, transparent 45%),
+    radial-gradient(1000px circle at 85% 90%, rgba(255, 90, 95, 0.07) 0%, transparent 50%),
+    radial-gradient(800px circle at 15% 95%, rgba(255, 59, 67, 0.05) 0%, transparent 45%),
+    linear-gradient(135deg, #F5F7F8 0%, #FFFFFF 50%, #EEF2F5 100%);
+
+  --input-bg: #FFFFFF;
+  --btn-gradient: linear-gradient(135deg, #FF3B43 0%, #FF5A5F 100%);
+  --btn-shadow: 0 4px 14px rgba(255, 59, 67, 0.35);
+  --btn-shadow-hover: 0 6px 20px rgba(255, 59, 67, 0.48);
+  --card-bg: rgba(255, 255, 255, 0.94);
+  --modal-bg: rgba(255, 255, 255, 0.98);
+  --dropdown-bg: rgba(255, 255, 255, 0.98);
+  --pill-bg: rgba(255, 59, 67, 0.1);
+  --pill-border: rgba(255, 59, 67, 0.25);
+  --pill-color: #FF3B43;
+
+  color-scheme: light;
+}
+
+[data-theme="amber"] {
+  /* Golden Amber / Solid Color Palette - No Gradients */
+  --primary: #FFD21C;        /* Golden Yellow - Main background, primary buttons */
+  --primary-dark: #FF8A00;   /* Orange - Headers, navigation, active controls */
+  --secondary: #FFFFFF;      /* White - Cards, screens, inputs */
+  --secondary-light: #FFF7CC;/* Pale Yellow - Subtle backgrounds/highlights */
+  --accent: #FFD600;         /* Bright Yellow - CTAs, selected items */
+  --accent-orange: #FF8A00;  /* Orange */
+  --success: #4CAF50;        /* Green - Status/positive indicators */
+  --bg: #FFD21C;             /* Golden Yellow - Main background (solid) */
+  --surface: #FFFFFF;        /* White - Cards, screens, inputs (solid) */
+  --surface-soft: #FFF7CC;   /* Pale Yellow - Subtle backgrounds/highlights (solid) */
+  --text-primary: #252525;   /* Dark Charcoal - Main text */
+  --text-secondary: #777777; /* Gray - Supporting text */
+  --text-muted: #888888;     /* Supporting muted text */
+  --border: #E5E5E5;         /* Light Gray - Inputs/dividers */
+
+  /* Aliases for legacy & functional selectors */
+  --text: var(--text-secondary);
+  --text-h: var(--text-primary);
+  --accent-bg: #FFF7CC;
+  --row-hover: #FFF7CC;
+  --header-bg: #FFFFFF;
+  --negative: #e53935;
+  --positive: var(--success);
+
+  /* Solid Surfaces (Zero Gradients / Zero Glass Blur) */
+  --glass-bg: #FFFFFF;
+  --glass-bg-soft: #FFF7CC;
+  --glass-bg-card: #FFFFFF;
+  --glass-border: #E5E5E5;
+  --glass-border-subtle: #E5E5E5;
+  --glass-blur: none;
+  --glass-blur-sm: none;
+  --glass-blur-lg: none;
+
+  /* Solid Elevation Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.12);
+  --shadow-glow: none;
+
+  /* Scrollbars */
+  --scrollbar-thumb: #FF8A00;
+  --scrollbar-thumb-hover: #E67A00;
+
+  /* Solid Background - No Gradients */
+  --body-bg: #FFD21C;
+
+  --input-bg: #FFFFFF;
+  --btn-gradient: #FFD21C;   /* Solid Golden Yellow button */
+  --btn-color: #252525;      /* Dark Charcoal text */
+  --btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --btn-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.16);
+  --card-bg: #FFFFFF;
+  --modal-bg: #FFFFFF;
+  --dropdown-bg: #FFFFFF;
+  --pill-bg: #FFF7CC;        /* Solid Pale Yellow */
+  --pill-border: #FF8A00;
+  --pill-color: #FF8A00;
+
+  color-scheme: light;
+}
+
+
+:root {
+  /* Global Fonts & Typography */
+  --sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  font: 14.5px/155% var(--sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--sans);
+  background: var(--body-bg);
+  background-attachment: fixed;
+  background-size: cover;
+  transition: background 0.3s ease, color 0.2s ease;
+}
+
+#root {
+  height: 100%;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--sans);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.015em;
+}
+
+h1 { font-size: 22px; }
+h2 { font-size: 19px; }
+h3 { font-size: 16px; }
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}
